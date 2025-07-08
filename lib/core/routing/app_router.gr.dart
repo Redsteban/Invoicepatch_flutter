@@ -10,81 +10,167 @@
 
 part of 'app_router.dart';
 
-abstract class $AppMainRouter extends RootStackRouter {
-  $AppMainRouter({super.navigatorKey});
+abstract class _$AppMainRouter extends RootStackRouter {
+  _$AppMainRouter({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    ClientEntryRoute.name: (routeData) {
-      final args = routeData.argsAs<ClientEntryRouteArgs>(
-          orElse: () => const ClientEntryRouteArgs());
+    LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ClientEntryPage(
-          key: args.key,
-          existingClient: args.existingClient,
-        ),
+        child: const LoginScreen(),
+      );
+    },
+    RegistrationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationScreen(),
+      );
+    },
+    OnboardingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OnboardingScreen(),
+      );
+    },
+    MainWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MainWrapperScreen(),
       );
     },
     ClientListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ClientListPage(),
+        child: const ClientListScreen(),
       );
     },
-    DailyLogEntryRoute.name: (routeData) {
-      final args = routeData.argsAs<DailyLogEntryRouteArgs>(
-          orElse: () => const DailyLogEntryRouteArgs());
+    ClientEntryRoute.name: (routeData) {
+      final args = routeData.argsAs<ClientEntryRouteArgs>(
+          orElse: () => const ClientEntryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: DailyLogEntryPage(
+        child: ClientEntryScreen(
           key: args.key,
-          existingLog: args.existingLog,
-          initialDate: args.initialDate,
+          existingClient: args.existingClient,
         ),
       );
     },
     DailyLogListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const DailyLogListPage(),
+        child: const DailyLogListScreen(),
       );
     },
-    DashboardRoute.name: (routeData) {
+    DailyLogEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const DashboardPage(),
+        child: const DailyLogEntryScreen(),
       );
     },
-    LoginRoute.name: (routeData) {
+    InvoiceSimulationRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const LoginPage(),
+        child: const InvoiceSimulationScreen(),
       );
     },
-    MainWrapperRoute.name: (routeData) {
+    InvoiceCreationRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const MainWrapperPage(),
+        child: const InvoiceCreationScreen(),
       );
     },
-    OnboardingRoute.name: (routeData) {
+    DummyPage.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const OnboardingPage(),
-      );
-    },
-    RegistrationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegistrationPage(),
+        child: const DummyPage(),
       );
     },
   };
 }
 
 /// generated route for
-/// [ClientEntryPage]
+/// [LoginScreen]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+    : super(LoginRoute.name, initialChildren: children);
+
+  static const String name = 'LoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoginScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [RegistrationScreen]
+class RegistrationRoute extends PageRouteInfo<void> {
+  const RegistrationRoute({List<PageRouteInfo>? children})
+    : super(RegistrationRoute.name, initialChildren: children);
+
+  static const String name = 'RegistrationRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const RegistrationScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [OnboardingScreen]
+class OnboardingRoute extends PageRouteInfo<void> {
+  const OnboardingRoute({List<PageRouteInfo>? children})
+    : super(OnboardingRoute.name, initialChildren: children);
+
+  static const String name = 'OnboardingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const OnboardingScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [MainWrapperScreen]
+class MainWrapperRoute extends PageRouteInfo<void> {
+  const MainWrapperRoute({List<PageRouteInfo>? children})
+    : super(MainWrapperRoute.name, initialChildren: children);
+
+  static const String name = 'MainWrapperRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainWrapperScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [ClientListScreen]
+class ClientListRoute extends PageRouteInfo<void> {
+  const ClientListRoute({List<PageRouteInfo>? children})
+    : super(ClientListRoute.name, initialChildren: children);
+
+  static const String name = 'ClientListRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ClientListScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [ClientEntryScreen]
 class ClientEntryRoute extends PageRouteInfo<ClientEntryRouteArgs> {
   ClientEntryRoute({
     Key? key,
@@ -104,7 +190,7 @@ class ClientEntryRoute extends PageRouteInfo<ClientEntryRouteArgs> {
       final args = data.argsAs<ClientEntryRouteArgs>(
         orElse: () => const ClientEntryRouteArgs(),
       );
-      return ClientEntryPage(
+      return ClientEntryScreen(
         key: args.key,
         existingClient: args.existingClient,
       );
@@ -136,86 +222,7 @@ class ClientEntryRouteArgs {
 }
 
 /// generated route for
-/// [ClientListPage]
-class ClientListRoute extends PageRouteInfo<void> {
-  const ClientListRoute({List<PageRouteInfo>? children})
-    : super(ClientListRoute.name, initialChildren: children);
-
-  static const String name = 'ClientListRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const ClientListPage();
-    },
-  );
-}
-
-/// generated route for
-/// [DailyLogEntryPage]
-class DailyLogEntryRoute extends PageRouteInfo<DailyLogEntryRouteArgs> {
-  DailyLogEntryRoute({
-    Key? key,
-    DailyLog? existingLog,
-    DateTime? initialDate,
-    List<PageRouteInfo>? children,
-  }) : super(
-         DailyLogEntryRoute.name,
-         args: DailyLogEntryRouteArgs(
-           key: key,
-           existingLog: existingLog,
-           initialDate: initialDate,
-         ),
-         initialChildren: children,
-       );
-
-  static const String name = 'DailyLogEntryRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<DailyLogEntryRouteArgs>(
-        orElse: () => const DailyLogEntryRouteArgs(),
-      );
-      return DailyLogEntryPage(
-        key: args.key,
-        existingLog: args.existingLog,
-        initialDate: args.initialDate,
-      );
-    },
-  );
-}
-
-class DailyLogEntryRouteArgs {
-  const DailyLogEntryRouteArgs({this.key, this.existingLog, this.initialDate});
-
-  final Key? key;
-
-  final DailyLog? existingLog;
-
-  final DateTime? initialDate;
-
-  @override
-  String toString() {
-    return 'DailyLogEntryRouteArgs{key: $key, existingLog: $existingLog, initialDate: $initialDate}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DailyLogEntryRouteArgs) return false;
-    return key == other.key &&
-        existingLog == other.existingLog &&
-        initialDate == other.initialDate;
-  }
-
-  @override
-  int get hashCode =>
-      key.hashCode ^ existingLog.hashCode ^ initialDate.hashCode;
-}
-
-/// generated route for
-/// [DailyLogListPage]
+/// [DailyLogListScreen]
 class DailyLogListRoute extends PageRouteInfo<void> {
   const DailyLogListRoute({List<PageRouteInfo>? children})
     : super(DailyLogListRoute.name, initialChildren: children);
@@ -225,87 +232,71 @@ class DailyLogListRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DailyLogListPage();
+      return const DailyLogListScreen();
     },
   );
 }
 
 /// generated route for
-/// [DashboardPage]
-class DashboardRoute extends PageRouteInfo<void> {
-  const DashboardRoute({List<PageRouteInfo>? children})
-    : super(DashboardRoute.name, initialChildren: children);
+/// [DailyLogEntryScreen]
+class DailyLogEntryRoute extends PageRouteInfo<void> {
+  const DailyLogEntryRoute({List<PageRouteInfo>? children})
+    : super(DailyLogEntryRoute.name, initialChildren: children);
 
-  static const String name = 'DashboardRoute';
+  static const String name = 'DailyLogEntryRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DashboardPage();
+      return const DailyLogEntryScreen();
     },
   );
 }
 
 /// generated route for
-/// [LoginPage]
-class LoginRoute extends PageRouteInfo<void> {
-  const LoginRoute({List<PageRouteInfo>? children})
-    : super(LoginRoute.name, initialChildren: children);
+/// [InvoiceSimulationScreen]
+class InvoiceSimulationRoute extends PageRouteInfo<void> {
+  const InvoiceSimulationRoute({List<PageRouteInfo>? children})
+    : super(InvoiceSimulationRoute.name, initialChildren: children);
 
-  static const String name = 'LoginRoute';
+  static const String name = 'InvoiceSimulationRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const LoginPage();
+      return const InvoiceSimulationScreen();
     },
   );
 }
 
 /// generated route for
-/// [MainWrapperPage]
-class MainWrapperRoute extends PageRouteInfo<void> {
-  const MainWrapperRoute({List<PageRouteInfo>? children})
-    : super(MainWrapperRoute.name, initialChildren: children);
+/// [InvoiceCreationScreen]
+class InvoiceCreationRoute extends PageRouteInfo<void> {
+  const InvoiceCreationRoute({List<PageRouteInfo>? children})
+    : super(InvoiceCreationRoute.name, initialChildren: children);
 
-  static const String name = 'MainWrapperRoute';
+  static const String name = 'InvoiceCreationRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const MainWrapperPage();
+      return const InvoiceCreationScreen();
     },
   );
 }
 
 /// generated route for
-/// [OnboardingPage]
-class OnboardingRoute extends PageRouteInfo<void> {
-  const OnboardingRoute({List<PageRouteInfo>? children})
-    : super(OnboardingRoute.name, initialChildren: children);
+/// [DummyPage]
+class DummyPage extends PageRouteInfo<void> {
+  const DummyPage({List<PageRouteInfo>? children})
+    : super(DummyPage.name, initialChildren: children);
 
-  static const String name = 'OnboardingRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const OnboardingPage();
-    },
-  );
-}
-
-/// generated route for
-/// [RegistrationPage]
-class RegistrationRoute extends PageRouteInfo<void> {
-  const RegistrationRoute({List<PageRouteInfo>? children})
-    : super(RegistrationRoute.name, initialChildren: children);
-
-  static const String name = 'RegistrationRoute';
+  static const String name = 'DummyPage';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const RegistrationPage();
+      return const DummyPage();
     },
   );
 }
