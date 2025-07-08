@@ -557,15 +557,13 @@ class _DailyLogsScreenState extends State<DailyLogsScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          // --- Enhanced Invoice Summary ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: _buildInvoiceSummary(),
-          ),
-          Container(
-            color: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Invoice Summary removed per user request
+            Expanded(
+              child: Container(
+                color: Colors.white,
             child: TableCalendar(
               firstDay: widget.payPeriodStart.subtract(const Duration(days: 7)),
               lastDay: widget.payPeriodEnd.add(const Duration(days: 7)),
@@ -618,7 +616,8 @@ class _DailyLogsScreenState extends State<DailyLogsScreen> {
               ),
               enabledDayPredicate: _isInPayPeriod,
             ),
-          ),
+              ),
+            ),
           const SizedBox(height: 16),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -802,6 +801,7 @@ class _DailyLogsScreenState extends State<DailyLogsScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

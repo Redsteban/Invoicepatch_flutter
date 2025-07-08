@@ -22,7 +22,14 @@ class PayPeriodRadioGroup extends StatelessWidget {
           value: option,
           groupValue: value,
           onChanged: onChanged,
-          title: Text(labels[option] ?? option),
+          title: Text(
+            labels[option] ?? option,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           activeColor: const Color(0xFF50C878),
         ),
       )).toList(),
