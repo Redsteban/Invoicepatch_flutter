@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:invoicepatch_contractor/features/expense_tracking/models/expense_receipt.dart';
 import 'package:invoicepatch_contractor/features/expense_tracking/services/camera_service.dart';
-import 'package:invoicepatch_contractor/features/expense_tracking/services/ocr_service.dart';
+import 'package:invoicepatch_contractor/features/expense_tracking/services/simple_ocr_service.dart';
 import 'package:invoicepatch_contractor/features/expense_tracking/services/expense_categorization_service.dart';
 import 'package:invoicepatch_contractor/features/expense_tracking/presentation/screens/receipt_details_screen.dart';
 import 'dart:io';
@@ -18,7 +18,7 @@ class ReceiptScannerScreen extends StatefulWidget {
 
 class _ReceiptScannerScreenState extends State<ReceiptScannerScreen> {
   final CameraService _cameraService = CameraService();
-  final OCRService _ocrService = OCRService();
+  final SimpleOCRService _ocrService = SimpleOCRService();
   final ExpenseCategorizationService _categorizationService = ExpenseCategorizationService();
   
   bool _isProcessing = false;
@@ -613,7 +613,6 @@ class _ReceiptScannerScreenState extends State<ReceiptScannerScreen> {
   @override
   void dispose() {
     _cameraService.dispose();
-    _ocrService.dispose();
     super.dispose();
   }
 }
