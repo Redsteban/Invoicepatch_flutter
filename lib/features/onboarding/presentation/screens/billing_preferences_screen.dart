@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/onboarding_bloc.dart';
 import '../../bloc/onboarding_event.dart';
 import '../../models/billing_preferences.dart';
-import 'package:lottie/lottie.dart';
+import '../../../../shared/models/enums/billing_method.dart';
 
 class BillingPreferencesScreen extends StatefulWidget {
   const BillingPreferencesScreen({Key? key}) : super(key: key);

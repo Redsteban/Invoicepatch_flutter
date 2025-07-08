@@ -10,6 +10,7 @@ import 'package:invoicepatch_contractor/features/invoice_simulation/presentation
 import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/screens/invoice_simulation_screen.dart';
 import 'package:invoicepatch_contractor/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:invoicepatch_contractor/shared/models/client.dart';
+import 'package:invoicepatch_contractor/shared/models/daily_log.dart';
 import 'package:flutter/material.dart';
 
 part 'app_router.gr.dart';

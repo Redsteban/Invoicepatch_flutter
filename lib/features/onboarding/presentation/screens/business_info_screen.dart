@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/onboarding_bloc.dart';
 import '../../bloc/onboarding_event.dart';
 import '../../models/business_info.dart';
-import 'package:lottie/lottie.dart';
 
 class BusinessInfoScreen extends StatefulWidget {
   const BusinessInfoScreen({Key? key}) : super(key: key);
