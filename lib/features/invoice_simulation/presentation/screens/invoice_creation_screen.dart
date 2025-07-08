@@ -560,7 +560,11 @@ class _DailyLogsScreenState extends State<DailyLogsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Invoice Summary removed per user request
+            // Green Invoice Summary for the summary section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: _buildInvoiceSummary(),
+            ),
             Expanded(
               child: Container(
                 color: Colors.white,
@@ -1099,94 +1103,71 @@ class InvoicePreviewScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.black,
-                    const Color(0xFF50C878).withOpacity(0.9),
+            // Simple white summary section
+            Card(
+              elevation: 2,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Invoice Totals',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Subtotal:', style: TextStyle(color: Colors.black)),
+                        Text('\$${subtotal.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('GST (5%):', style: TextStyle(color: Colors.black)),
+                        Text('\$${gst.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Subsistence (Tax-Free):', style: TextStyle(color: Colors.black)),
+                        Text('\$${subsistenceTotal.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
+                      ],
+                    ),
+                    const Divider(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Grand Total:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          '\$${grandTotal.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF50C878).withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.receipt_long,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Invoice Summary',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '14-Day Period',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  _buildSummaryRow('Subtotal', '\$${subtotal.toStringAsFixed(2)}', Icons.attach_money),
-                  _buildSummaryRow('GST (5%)', '\$${gst.toStringAsFixed(2)}', Icons.percent),
-                  _buildSummaryRow('Subsistence (Tax-Free)', '\$${subsistenceTotal.toStringAsFixed(2)}', Icons.restaurant),
-                  const Divider(color: Colors.white30, height: 32),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Grand Total',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '\$${grandTotal.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
             if (invoice.notes != null && invoice.notes!.isNotEmpty) ...[
@@ -1203,6 +1184,7 @@ class InvoicePreviewScreen extends StatelessWidget {
             ],
             const SizedBox(height: 32),
             _buildApprovalSection(context),
+            const SizedBox(height: 24), // Add bottom padding to prevent boundary issues
           ],
         ),
       ),
