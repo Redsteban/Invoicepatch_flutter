@@ -1032,8 +1032,19 @@ class InvoicePreviewScreen extends StatelessWidget {
   double get subsistenceTotal => invoice.lineItems.fold(0, (sum, item) => sum + (item.category == 'subsistence' ? item.amount : 0));
   double get grandTotal => subtotal + gst + subsistenceTotal;
 
+  // Helper method to check if date is in pay period
+  bool _isInPayPeriod(DateTime date) {
+    final payPeriodStart = DateTime.parse(invoice.lineItems.first.id.split('T')[0]);
+    final payPeriodEnd = DateTime.parse(invoice.lineItems.last.id.split('T')[0]);
+    return !date.isBefore(payPeriodStart) && !date.isAfter(payPeriodEnd);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Calculate pay period dates from line items
+    final payPeriodStart = DateTime.parse(invoice.lineItems.first.id.split('T')[0]);
+    final payPeriodEnd = DateTime.parse(invoice.lineItems.last.id.split('T')[0]);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -1042,151 +1053,151 @@ class InvoicePreviewScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text('Invoice Preview', style: TextStyle(color: Colors.black)),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              elevation: 2,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Invoice #${invoice.invoiceNumber}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-                    const SizedBox(height: 8),
-                    Text('Date: ${invoice.invoiceDate}', style: const TextStyle(color: Colors.black)),
-                    const SizedBox(height: 8),
-                    Text('Contractor: ${invoice.contractorName}', style: const TextStyle(color: Colors.black)),
-                    Text('Client: ${invoice.clientName}', style: const TextStyle(color: Colors.black)),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text('Work Summary', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
-            const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: const [
-                  DataColumn(label: Text('Day', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Date', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Description', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Location', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Ticket #', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Truck \$', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('KMS driven', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('KMS rate \$', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Other \$', style: TextStyle(color: Colors.black))),
-                  DataColumn(label: Text('Subtotal \$', style: TextStyle(color: Colors.black))),
-                ],
-                rows: invoice.lineItems.asMap().entries.map((entry) {
-                  final i = entry.key;
-                  final item = entry.value;
-                  return DataRow(cells: [
-                    DataCell(Text((i + 1).toString(), style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(item.id.split('T')[0], style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(item.description, style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(item.location ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(item.unit ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text('\$${item.truckRate.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(item.kmsRegular.toStringAsFixed(1), style: const TextStyle(color: Colors.black))),
-                    DataCell(Text('\$${item.kmsRegRate.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text('\$${item.otherCharges.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text('\$${item.amount.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black))),
-                  ]);
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Simple white summary section
-            Card(
-              elevation: 2,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Invoice Totals',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+      body: Column(
+        children: [
+          // Calendar with highlighted pay period
+          Container(
+            color: Colors.white,
+            child: TableCalendar(
+              firstDay: payPeriodStart.subtract(const Duration(days: 7)),
+              lastDay: payPeriodEnd.add(const Duration(days: 7)),
+              focusedDay: payPeriodStart,
+              calendarFormat: CalendarFormat.month,
+              enabledDayPredicate: (day) => true,
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, day, focusedDay) {
+                  final inPeriod = _isInPayPeriod(day);
+                  return Container(
+                    margin: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: inPeriod ? const Color(0xFF50C878) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(
+                          color: inPeriod ? Colors.white : Colors.black,
+                          fontWeight: inPeriod ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Subtotal:', style: TextStyle(color: Colors.black)),
-                        Text('\$${subtotal.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('GST (5%):', style: TextStyle(color: Colors.black)),
-                        Text('\$${gst.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Subsistence (Tax-Free):', style: TextStyle(color: Colors.black)),
-                        Text('\$${subsistenceTotal.toStringAsFixed(2)}', style: const TextStyle(color: Colors.black)),
-                      ],
-                    ),
-                    const Divider(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Grand Total:',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          '\$${grandTotal.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  );
+                },
+              ),
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Daily entries section
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Daily Entries',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
             ),
-            if (invoice.notes != null && invoice.notes!.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              Text('Notes', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
-              const SizedBox(height: 8),
-              Text(invoice.notes!, style: const TextStyle(color: Colors.black)),
-            ],
-            if (invoice.paymentTerms != null && invoice.paymentTerms!.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text('Payment Terms', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
-              const SizedBox(height: 8),
-              Text(invoice.paymentTerms!, style: const TextStyle(color: Colors.black)),
-            ],
-            const SizedBox(height: 32),
-            _buildApprovalSection(context),
-            const SizedBox(height: 24), // Add bottom padding to prevent boundary issues
-          ],
-        ),
+          ),
+          
+          const SizedBox(height: 8),
+          
+          // List of daily entries
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: invoice.lineItems.length,
+              itemBuilder: (context, index) {
+                final item = invoice.lineItems[index];
+                final date = DateTime.parse(item.id.split('T')[0]);
+                
+                return Card(
+                  elevation: 1,
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        // Date circle
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF50C878).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(color: const Color(0xFF50C878), width: 2),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${date.day}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF50C878),
+                              ),
+                            ),
+                          ),
+                        ),
+                        
+                        const SizedBox(width: 16),
+                        
+                        // Entry details
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              if (item.description.isNotEmpty)
+                                Text(
+                                  item.description,
+                                  style: const TextStyle(color: Colors.black87),
+                                ),
+                              if (item.location != null && item.location!.isNotEmpty)
+                                Text(
+                                  'Location: ${item.location}',
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                            ],
+                          ),
+                        ),
+                        
+                        // Amount
+                        Text(
+                          '\$${item.amount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Color(0xFF50C878),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }
