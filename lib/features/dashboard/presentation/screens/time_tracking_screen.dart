@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dashboard_screen.dart'; // For AnimatedGradientButton
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/screens/invoice_creation_screen.dart';
+import 'package:invoicepatch_contractor/shared/models/time_entry.dart';
 
 class TimeTrackingScreen extends StatefulWidget {
   const TimeTrackingScreen({Key? key}) : super(key: key);
@@ -16,13 +19,16 @@ class _TimeTrackingScreenState extends State<TimeTrackingScreen> {
   DateTime? _startTime;
   Duration _elapsedTime = Duration.zero;
   bool _isRunning = false;
-  
+
+  // Storage for time entries
+  List<TimeEntry> _timeEntries = [];
+
   @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,10 +38,11 @@ class _TimeTrackingScreenState extends State<TimeTrackingScreen> {
         backgroundColor: Colors.black,
         foregroundColor: const Color(0xFF50C878),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 32),
             // Clock Display
             Container(
               width: 280,
@@ -139,12 +146,16 @@ class _TimeTrackingScreenState extends State<TimeTrackingScreen> {
                   ),
                 ],
               ),
+            const SizedBox(height: 32),
+            // Recent Time Entries
+            _buildRecentEntries(),
+            const SizedBox(height: 32),
           ],
         ),
       ),
     );
   }
-  
+
   void _toggleTimer() {
     setState(() {
       if (_isRunning) {
@@ -161,7 +172,7 @@ class _TimeTrackingScreenState extends State<TimeTrackingScreen> {
       }
     });
   }
-  
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String hours = twoDigits(duration.inHours);
@@ -169,19 +180,138 @@ class _TimeTrackingScreenState extends State<TimeTrackingScreen> {
     String seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$hours:$minutes:$seconds';
   }
-  
+
   void _resetTimer() {
     setState(() {
       _elapsedTime = Duration.zero;
       _startTime = null;
     });
   }
-  
+
   void _saveToLog() {
-    final hours = _elapsedTime.inMinutes / 60;
-    // TODO: Implement navigation to invoice creation with pre-filled hours
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Saved $hours hours to log (feature coming soon)')),
+    if (_elapsedTime.inSeconds == 0) return;
+    final entry = TimeEntry(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      date: DateTime.now(),
+      startTime: _startTime!,
+      endTime: DateTime.now(),
+      duration: _elapsedTime,
+      hours: _elapsedTime.inMinutes / 60,
+      clientId: '', // Will be selected in invoice creation
+      description: '',
+    );
+    setState(() {
+      _timeEntries.add(entry);
+    });
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Time Saved'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Duration: ${_formatDuration(_elapsedTime)}'),
+            Text('Hours: ${entry.hours.toStringAsFixed(2)}'),
+            const SizedBox(height: 16),
+            const Text('What would you like to do?'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _resetTimer();
+            },
+            child: const Text('Continue Tracking'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _navigateToInvoiceWithTime(entry);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF50C878),
+            ),
+            child: const Text('Create Invoice'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToInvoiceWithTime(TimeEntry entry) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InvoiceCreationScreen(),
+      ),
+    );
+  }
+
+  Widget _buildRecentEntries() {
+    if (_timeEntries.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(32),
+        child: Center(
+          child: Text(
+            'No time entries yet',
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+        ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'Recent Time Entries',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _timeEntries.length,
+          itemBuilder: (context, index) {
+            final entry = _timeEntries[index];
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: const Color(0xFF50C878),
+                  child: const Icon(
+                    LucideIcons.clock,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                title: Text(
+                  DateFormat('MMM d, h:mm a').format(entry.date),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  'Duration: ${_formatDuration(entry.duration)}',
+                ),
+                trailing: Text(
+                  '${entry.hours.toStringAsFixed(2)} hrs',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF50C878),
+                  ),
+                ),
+                onTap: () => _navigateToInvoiceWithTime(entry),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 } 

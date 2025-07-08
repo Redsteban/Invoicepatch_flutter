@@ -3,11 +3,13 @@ import 'steps/invoice_details_step.dart';
 import 'steps/rates_configuration_step.dart';
 import 'steps/invoice_log_step.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:invoicepatch_contractor/shared/models/time_entry.dart';
 
 const emeraldGreen = Color(0xFF50C878);
 
 class InvoiceCreationScreen extends StatefulWidget {
-  const InvoiceCreationScreen({Key? key}) : super(key: key);
+  final TimeEntry? prefilledTimeEntry;
+  const InvoiceCreationScreen({Key? key, this.prefilledTimeEntry}) : super(key: key);
   @override
   State<InvoiceCreationScreen> createState() => _InvoiceCreationScreenState();
 }
@@ -15,6 +17,19 @@ class InvoiceCreationScreen extends StatefulWidget {
 class _InvoiceCreationScreenState extends State<InvoiceCreationScreen> {
   int _currentStep = 0;
   Map<String, dynamic> _formData = {};
+  final TextEditingController _hoursWorkedController = TextEditingController();
+  String _payType = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.prefilledTimeEntry != null) {
+      final hours = widget.prefilledTimeEntry!.hours;
+      _hoursWorkedController.text = hours.toStringAsFixed(2);
+      _payType = 'hourly';
+      _calculateDailyTotal();
+    }
+  }
 
   void _nextStep(Map<String, dynamic> data) {
     setState(() {

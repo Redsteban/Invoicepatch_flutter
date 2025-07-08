@@ -4,6 +4,8 @@ import 'package:invoicepatch_contractor/features/auth/presentation/screens/login
 import 'package:invoicepatch_contractor/features/auth/presentation/screens/registration_screen.dart';
 import 'package:invoicepatch_contractor/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:invoicepatch_contractor/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:invoicepatch_contractor/features/dashboard/presentation/screens/main_wrapper_screen.dart';
+import 'package:invoicepatch_contractor/features/dashboard/presentation/screens/time_tracking_screen.dart';
 import 'package:invoicepatch_contractor/features/daily_logs/presentation/screens/daily_log_entry_screen.dart';
 import 'package:invoicepatch_contractor/features/daily_logs/presentation/screens/daily_log_list_screen.dart';
 import 'package:invoicepatch_contractor/features/clients/presentation/screens/client_entry_screen.dart';
@@ -16,7 +18,7 @@ import 'package:invoicepatch_contractor/features/onboarding/bloc/onboarding_bloc
 part 'app_router.gr.dart';
 
 @AutoRouterConfig()
-class AppRouter extends _$AppRouter {
+class AppMainRouter extends $AppMainRouter {
   @override
   RouteType get defaultRouteType => const RouteType.adaptive();
 
@@ -24,47 +26,55 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
     // Auth Routes
     AutoRoute(
-      page: LoginRoute.page,
+      page: LoginPage,
       path: '/login',
       initial: true,
     ),
     AutoRoute(
-      page: RegistrationRoute.page,
+      page: RegistrationPage,
       path: '/registration',
     ),
     AutoRoute(
-      page: OnboardingRoute.page,
+      page: OnboardingPage,
       path: '/onboarding',
     ),
     // Main App Routes
     AutoRoute(
-      page: DashboardRoute.page,
-      path: '/dashboard',
+      page: MainWrapperPage,
+      path: '/main',
+      children: [
+        AutoRoute(page: DashboardPage, path: 'dashboard'),
+        // Update these as well if you have widget classes for them
+        // AutoRoute(page: TimeTrackingPage, path: 'time'),
+        // AutoRoute(page: InvoiceListPage, path: 'invoices'),
+        // AutoRoute(page: ExpenseListPage, path: 'expenses'),
+        // AutoRoute(page: ReceiptCameraPage, path: 'camera'),
+      ],
     ),
     // Daily Logs Routes
     AutoRoute(
-      page: DailyLogListRoute.page,
+      page: DailyLogListPage,
       path: '/daily-logs',
     ),
     AutoRoute(
-      page: DailyLogEntryRoute.page,
+      page: DailyLogEntryPage,
       path: '/daily-logs/add',
     ),
     AutoRoute(
-      page: DailyLogEntryRoute.page,
+      page: DailyLogEntryPage,
       path: '/daily-logs/edit',
     ),
     // Client Routes
     AutoRoute(
-      page: ClientListRoute.page,
+      page: ClientListPage,
       path: '/clients',
     ),
     AutoRoute(
-      page: ClientEntryRoute.page,
+      page: ClientEntryPage,
       path: '/clients/add',
     ),
     AutoRoute(
-      page: ClientEntryRoute.page,
+      page: ClientEntryPage,
       path: '/clients/edit',
     ),
   ];
@@ -131,4 +141,11 @@ class ClientEntryPage extends StatelessWidget {
   const ClientEntryPage({Key? key, this.existingClient}) : super(key: key);
   @override
   Widget build(BuildContext context) => ClientEntryScreen(existingClient: existingClient);
+}
+
+@RoutePage()
+class MainWrapperPage extends StatelessWidget {
+  const MainWrapperPage({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) => const MainWrapperScreen();
 } 

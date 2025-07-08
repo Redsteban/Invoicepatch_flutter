@@ -14,7 +14,7 @@ class InvoicePatchApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = AppRouter();
+    final appRouter = AppMainRouter();
     final database = AppDatabase();
     
     // Define Swissborg palette
@@ -148,7 +148,9 @@ class InvoicePatchApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             useMaterial3: true,
           ),
-          routerConfig: appRouter.config(),
+          routerDelegate: appRouter.delegate(),
+          routeInformationParser: appRouter.defaultRouteParser(),
+          routeInformationProvider: appRouter.routeInfoProvider(),
         ),
       ),
     );

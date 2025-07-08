@@ -41,7 +41,7 @@ dependencies:
   drift_flutter: ^0.2.4
 
   # Navigation
-  auto_route: ^7.3.2
+  auto_route: ^10.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,6 +52,7 @@ dependencies:
   intl: ^0.18.0
   table_calendar: ^3.0.9
   lucide_icons: ^0.257.0
+  fl_chart: ^0.66.0
 
 dev_dependencies:
   flutter_test:
@@ -62,12 +63,12 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
 
   # Code Generation
   build_runner: ^2.4.9
   drift_dev: ^2.26.0
-  auto_route_generator: ^7.3.2
+  auto_route_generator: ^10.2.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

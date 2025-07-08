@@ -15,6 +15,8 @@ import 'package:invoicepatch_contractor/core/routing/app_router.dart';
 import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/screens/invoice_creation_screen.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/services.dart';
+import 'package:invoicepatch_contractor/features/analytics/presentation/screens/analytics_dashboard_screen.dart';
+import 'package:invoicepatch_contractor/features/invoice_management/presentation/screens/invoice_history_screen.dart';
 
 const emeraldGreen = Color(0xFF50C878);
 
@@ -686,6 +688,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   context.router.push(ClientListRoute());
                 },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: AnimatedDashboardCard(
+                index: 4,
+                child: _buildActionCard(
+                  title: 'P&L Analytics',
+                  subtitle: 'View insights',
+                  icon: LucideIcons.chartBar,
+                  color: Colors.purple,
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.push(
+                      context,
+                      SlidePageRoute(
+                        page: const AnalyticsDashboardScreen(),
+                        direction: SlideDirection.right,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: AnimatedDashboardCard(
+                index: 5,
+                child: _buildActionCard(
+                  title: 'Past Invoices',
+                  subtitle: 'View history',
+                  icon: LucideIcons.history,
+                  color: Colors.indigo,
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.push(
+                      context,
+                      SlidePageRoute(
+                        page: const InvoiceHistoryScreen(),
+                        direction: SlideDirection.right,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
