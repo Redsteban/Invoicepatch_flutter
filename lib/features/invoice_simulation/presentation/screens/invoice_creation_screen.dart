@@ -31,6 +31,13 @@ class _InvoiceCreationScreenState extends State<InvoiceCreationScreen> {
     }
   }
 
+  void _calculateDailyTotal() {
+    // Calculate daily total based on hours worked and pay type
+    final hours = double.tryParse(_hoursWorkedController.text) ?? 0.0;
+    final hourlyRate = (_formData['hourlyRate'] as double?) ?? 50.0; // Default rate
+    _formData['dailyTotal'] = hours * hourlyRate;
+  }
+
   void _nextStep(Map<String, dynamic> data) {
     setState(() {
       _formData.addAll(data);

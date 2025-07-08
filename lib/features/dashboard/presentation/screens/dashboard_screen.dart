@@ -701,7 +701,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: _buildActionCard(
                   title: 'P&L Analytics',
                   subtitle: 'View insights',
-                  icon: LucideIcons.chartBar,
+                  icon: LucideIcons.barChart3,
                   color: Colors.purple,
                   onTap: () {
                     HapticFeedback.lightImpact();

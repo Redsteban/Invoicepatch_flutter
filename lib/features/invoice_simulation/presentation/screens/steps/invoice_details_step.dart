@@ -5,6 +5,8 @@ import 'package:invoicepatch_contractor/features/invoice_simulation/presentation
 import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/widgets/date_picker_field.dart';
 import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/widgets/navigation_button_row.dart';
 
+const emeraldGreen = Color(0xFF50C878);
+
 class InvoiceDetailsStep extends StatefulWidget {
   final void Function(Map<String, dynamic>) onNext;
   final Map<String, dynamic>? initialData;
@@ -90,7 +92,7 @@ class _InvoiceDetailsStepState extends State<InvoiceDetailsStep> {
             PayPeriodRadioGroup(
               value: _periodType,
               options: ['14-day', 'monthly'],
-              onChanged: (val) => setState(() => _periodType = val),
+              onChanged: (val) => setState(() => _periodType = val ?? _periodType),
               labels: {'14-day': '14-Day', 'monthly': 'Monthly'},
             ),
             const SizedBox(height: 24),
@@ -168,6 +170,7 @@ class _InvoiceDetailsStepState extends State<InvoiceDetailsStep> {
                 icon: Icons.calendar_month,
                 selectedDate: _payPeriodEnd,
                 onDateSelected: (_) {}, // End date is auto-calculated
+                enabled: false, // Disable since it's auto-calculated
               ),
             ),
             const SizedBox(height: 16),

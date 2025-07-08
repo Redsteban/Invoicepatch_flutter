@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PayPeriodRadioGroup extends StatelessWidget {
   final String value;
   final List<String> options;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
   final Map<String, String> labels;
 
   const PayPeriodRadioGroup({

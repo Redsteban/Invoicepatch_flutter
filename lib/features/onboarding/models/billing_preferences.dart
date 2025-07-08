@@ -1,4 +1,4 @@
-enum BillingMethod { hourly, dayRate, mixed }
+import '../../../shared/models/enums/billing_method.dart';
 
 class BillingPreferences {
   final BillingMethod primaryMethod;

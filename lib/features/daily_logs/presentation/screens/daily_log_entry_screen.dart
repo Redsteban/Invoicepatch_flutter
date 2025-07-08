@@ -11,6 +11,7 @@ import 'package:invoicepatch_contractor/features/clients/bloc/client_bloc.dart';
 import 'package:invoicepatch_contractor/features/clients/bloc/client_event.dart';
 import 'package:invoicepatch_contractor/features/clients/bloc/client_state.dart';
 import 'package:invoicepatch_contractor/shared/models/client.dart';
+import 'package:invoicepatch_contractor/features/invoice_simulation/presentation/widgets/date_picker_field.dart';
 
 const emeraldGreen = Color(0xFF50C878);
 
@@ -161,19 +162,6 @@ class _DailyLogEntryScreenState extends State<DailyLogEntryScreen> {
     }
   }
 
-  void _showDatePicker() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
 
   Widget _buildExpenseFields() {
     return Column(
@@ -255,16 +243,18 @@ class _DailyLogEntryScreenState extends State<DailyLogEntryScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Date Picker
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text('Date: ${_selectedDate.toLocal().toString().split(' ')[0]}'),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.calendar_today),
-                      onPressed: _showDatePicker,
-                    ),
-                  ],
+                SizedBox(
+                  width: 400,
+                  child: DatePickerField(
+                    label: 'Date',
+                    icon: Icons.calendar_today,
+                    selectedDate: _selectedDate,
+                    onDateSelected: (picked) {
+                      setState(() {
+                        _selectedDate = picked;
+                      });
+                    },
+                  ),
                 ),
                 const SizedBox(height: 8),
                 SwitchListTile(
