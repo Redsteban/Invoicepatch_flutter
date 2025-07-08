@@ -34,11 +34,4 @@ class AppMainRouter extends _$AppMainRouter {
         AutoRoute(page: DailyLogEntryRoute.page, path: '/log-entry'),
         AutoRoute(page: InvoiceCreationRoute.page, path: '/invoice-creation'),
       ];
-}
-
-@RoutePage()
-class DummyPage extends StatelessWidget {
-  const DummyPage({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Dummy')));
 } 
